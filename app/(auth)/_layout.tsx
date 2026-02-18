@@ -9,8 +9,8 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen name="get-started" />
-      {/* <Stack.Screen name="login" />
-      <Stack.Screen name="register" /> */}
+      <Stack.Screen name="login" />
+      <Stack.Screen name="register" />
     </Stack>
   )
 }
