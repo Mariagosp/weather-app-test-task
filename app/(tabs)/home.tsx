@@ -1,9 +1,3 @@
-import { View, Text } from 'react-native'
+import HomePage from '../../screens/main/Home'
 
-export default function HomePage() {
-    return (
-        <View>
-            <Text>Welcome to Weather App Home Page 🌤</Text>
-        </View>
-    )
-}
+export default () => <HomePage />

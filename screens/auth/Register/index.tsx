@@ -27,17 +27,17 @@ export default function RegisterPage() {
         try {
             const { email, password } = data
 
-            // Создаём пользователя в Firebase Auth
+            // Create user in Firebase Auth
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             const user = userCredential.user
 
             console.log('got userCredential', userCredential)
             console.log('got user', user)
 
-            // Обновляем Zustand store
+            // Update Zustand store
             setUser(user)
 
-            // Редирект на home
+            // Redirect to home
             router.replace('/(tabs)/home')
         } catch (error: any) {
             console.log('Registration error:', error.message)
