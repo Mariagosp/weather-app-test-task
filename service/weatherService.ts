@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react'
 import { WeatherApiResponse } from '../types/weather'
 
 const apiKey = process.env.EXPO_PUBLIC_OPENWEATHER_API_KEY
@@ -23,4 +24,23 @@ export async function fetchWeatherByCoords(lat: number, lon: number): Promise<We
     const data = (await res.json()) as WeatherApiResponse
     if (data.cod !== 200) throw new Error(data.message || 'Invalid response')
     return data
+}
+
+export const fetchSuggestions = async (input: string, setSuggestions: Dispatch<SetStateAction<string[]>>) => {
+    if (!input.trim()) {
+        setSuggestions([])
+        return
+    }
+
+    try {
+        const res = await fetch(
+            `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${apiKey}`
+        )
+        const data = await res.json()
+        const names = data.map((item: any) => `${item.name}, ${item.country}`)
+        setSuggestions(names)
+    } catch (e) {
+        console.log('Suggestions error', e)
+        setSuggestions([])
+    }
 }

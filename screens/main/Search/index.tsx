@@ -6,10 +6,11 @@ import {
     TextInput,
     Pressable,
     ActivityIndicator,
-    Image,
     ScrollView,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    Keyboard,
+    TouchableWithoutFeedback
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
@@ -18,7 +19,7 @@ import { COLORS } from '../../../shared/const/colors'
 import { useWeatherStore } from '../../../shared/store'
 import type { WeatherApiResponse } from '../../../types/weather'
 import Header from '../../../components/Header'
-import { fetchWeatherByCity } from '../../../service/weatherService'
+import { fetchSuggestions, fetchWeatherByCity } from '../../../service/weatherService'
 import { ICON_BASE } from '../../../shared/const/api'
 import WeatherCard from '../../../components/WeatherCard'
 
@@ -29,6 +30,7 @@ export default function SearchPage() {
     const setCurrentWeather = useWeatherStore((s) => s.setCurrentWeather)
     const [query, setQuery] = useState('')
     const [weather, setWeather] = useState<WeatherApiResponse | null>(null)
+    const [suggestions, setSuggestions] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -55,47 +57,81 @@ export default function SearchPage() {
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={0}>
-            <Header subtitle={SEARCH_SUBTITLE} />
-            <ScrollView
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.keyboardDismissArea}>
+                    <Header subtitle={SEARCH_SUBTITLE} />
+                    <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 24 }]}
                 keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
             >
-                <View style={styles.searchRow}>
-                    <View style={styles.inputWrap}>
-                        <Ionicons name='search' size={20} color={COLORS.textSecondary} style={styles.inputIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholder='City name (e.g. London, Tokyo)'
-                            placeholderTextColor={COLORS.textSecondary}
-                            value={query}
-                            onChangeText={(t) => {
-                                setQuery(t)
-                                setError(null)
+                <View style={styles.searchBlock}>
+                    <View style={styles.searchRow}>
+                        <View style={styles.inputWrap}>
+                            <Ionicons name='search' size={20} color={COLORS.textSecondary} style={styles.inputIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder='City name (e.g. London, Tokyo)'
+                                placeholderTextColor={COLORS.textSecondary}
+                                value={query}
+                                onChangeText={(t) => {
+                                    setQuery(t)
+                                    setError(null)
+                                    fetchSuggestions(t, setSuggestions)
+                                }}
+                                onSubmitEditing={search}
+                                returnKeyType='search'
+                                autoCapitalize='words'
+                                autoCorrect={false}
+                            />
+                            {query.length > 0 && (
+                                <Pressable onPress={() => setQuery('')} hitSlop={8} style={styles.clearBtn}>
+                                    <Ionicons name='close-circle' size={20} color={COLORS.textSecondary} />
+                                </Pressable>
+                            )}
+                        </View>
+
+                        <Pressable
+                            style={({ pressed }) => [styles.searchBtn, pressed && styles.searchBtnPressed]}
+                            onPress={() => {
+                                search()
+                                Keyboard.dismiss()
                             }}
-                            onSubmitEditing={search}
-                            returnKeyType='search'
-                            autoCapitalize='words'
-                            autoCorrect={false}
-                        />
-                        {query.length > 0 && (
-                            <Pressable onPress={() => setQuery('')} hitSlop={8} style={styles.clearBtn}>
-                                <Ionicons name='close-circle' size={20} color={COLORS.textSecondary} />
-                            </Pressable>
-                        )}
+                            disabled={loading || !query.trim()}
+                        >
+                            {loading ? (
+                                <ActivityIndicator size='small' color={COLORS.main} />
+                            ) : (
+                                <Ionicons name='arrow-forward' size={22} color={COLORS.main} />
+                            )}
+                        </Pressable>
                     </View>
-                    <Pressable
-                        style={({ pressed }) => [styles.searchBtn, pressed && styles.searchBtnPressed]}
-                        onPress={search}
-                        disabled={loading || !query.trim()}
-                    >
-                        {loading ? (
-                            <ActivityIndicator size='small' color={COLORS.main} />
-                        ) : (
-                            <Ionicons name='arrow-forward' size={22} color={COLORS.main} />
-                        )}
-                    </Pressable>
+
+                    {suggestions.length > 0 && (
+                        <View style={styles.suggestionsContainer}>
+                            {suggestions.map((city, index) => (
+                                <Pressable
+                                    key={city}
+                                    onPress={() => {
+                                        setQuery(city)
+                                        setSuggestions([])
+                                        search()
+                                        Keyboard.dismiss()
+                                    }}
+                                    style={({ pressed }) => [
+                                        styles.suggestionItem,
+                                        index < suggestions.length - 1 && styles.suggestionItemBorder,
+                                        pressed && styles.suggestionItemPressed
+                                    ]}
+                                >
+                                    <Ionicons name='location-outline' size={18} color={COLORS.textSecondary} style={styles.suggestionIcon} />
+                                    <Text style={styles.suggestionText} numberOfLines={1}>{city}</Text>
+                                    <Ionicons name='chevron-forward' size={16} color={COLORS.textSecondary} />
+                                </Pressable>
+                            ))}
+                        </View>
+                    )}
                 </View>
 
                 {error && (
@@ -116,7 +152,9 @@ export default function SearchPage() {
                 )}
 
                 {weather && <WeatherCard weather={weather} error={null} openDetails={openDetails} />}
-            </ScrollView>
+                    </ScrollView>
+                </View>
+            </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     )
 }
@@ -126,6 +164,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: COLORS.main
     },
+    keyboardDismissArea: {
+        flex: 1
+    },
     scroll: {
         flex: 1
     },
@@ -133,11 +174,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 24
     },
+    searchBlock: {
+        position: 'relative',
+        marginBottom: 24
+    },
     searchRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        marginBottom: 24
+        gap: 12
     },
     inputWrap: {
         flex: 1,
@@ -287,5 +331,46 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: COLORS.textSecondary,
         marginTop: 12
+    },
+    suggestionsContainer: {
+        position: 'absolute',
+        top: 60,
+        left: 0,
+        right: 64,
+        backgroundColor: COLORS.main,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: 'rgba(248, 250, 252, 0.08)',
+        overflow: 'hidden',
+        maxHeight: 240,
+        zIndex: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        elevation: 8
+    },
+    suggestionItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        backgroundColor: 'rgba(248, 250, 252, 0.04)'
+    },
+    suggestionItemBorder: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(248, 250, 252, 0.06)'
+    },
+    suggestionItemPressed: {
+        backgroundColor: 'rgba(245, 158, 11, 0.12)'
+    },
+    suggestionIcon: {
+        marginRight: 12
+    },
+    suggestionText: {
+        flex: 1,
+        fontSize: 16,
+        color: COLORS.text,
+        fontWeight: '500'
     }
 })
