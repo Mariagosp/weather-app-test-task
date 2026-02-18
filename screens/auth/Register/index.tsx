@@ -1,10 +1,13 @@
-import { router } from 'expo-router'
+import { router, useRouter } from 'expo-router'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { RegisterFormData, registerSchema } from './utils/registerSchema'
 import { COLORS } from '../../../shared/const/colors'
+import { useUserStore } from '../../../shared/store'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../../firebase'
 
 export default function RegisterPage() {
     const {
@@ -16,9 +19,29 @@ export default function RegisterPage() {
         defaultValues: { email: '', password: '', confirmPassword: '' }
     })
 
-    const onSubmit = (data: RegisterFormData) => {
+    const router = useRouter()
+    const setUser = useUserStore((state) => state.setUserData)
+
+    const onSubmit = async (data: RegisterFormData) => {
         console.log('Register', data)
-        // router.replace('/(tabs)/home')
+        try {
+            const { email, password } = data
+
+            // Создаём пользователя в Firebase Auth
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user
+
+            console.log('got userCredential', userCredential)
+            console.log('got user', user)
+
+            // Обновляем Zustand store
+            setUser(user)
+
+            // Редирект на home
+            router.replace('/(tabs)/home')
+        } catch (error: any) {
+            console.log('Registration error:', error.message)
+        }
     }
 
     return (
