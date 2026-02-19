@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebase'
 import { useUserStore } from '../shared/store'
+import { removeAuthToken, saveAuthToken } from '../service/authStorage'
 
 type Props = {
     children: React.ReactNode
@@ -16,8 +17,16 @@ export default function AuthProvider({ children }: Props) {
     const prevUserRef = useRef<typeof user>(undefined)
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             setUserData(firebaseUser)
+
+            if (firebaseUser) {
+                const token = await firebaseUser.getIdToken()
+
+                await saveAuthToken(token)
+            } else {
+                await removeAuthToken()
+            }
         })
         return unsubscribe
     }, [setUserData])
