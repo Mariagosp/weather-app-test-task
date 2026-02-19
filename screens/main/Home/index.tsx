@@ -4,7 +4,6 @@ import * as Location from 'expo-location'
 import { router } from 'expo-router'
 import { COLORS } from '../../../shared/const/colors'
 import type { WeatherApiResponse } from '../../../types/weather'
-import Header from '../../../components/Header'
 import { fetchWeatherByCoords } from '../../../service/weatherService'
 import WeatherCard from '../../../components/WeatherCard'
 import * as Linking from 'expo-linking'
@@ -63,8 +62,8 @@ export default function HomePage() {
 
     const openDetails = () => {
         if (!weather) return
-      // setCurrentWeather(weather)
-      console.log('push to ', weather.id)
+        // setCurrentWeather(weather)
+        console.log('push to ', weather.id)
         router.push({
             pathname: '/weather-details',
             params: {
@@ -76,7 +75,6 @@ export default function HomePage() {
     if (status === 'loading' && !weather) {
         return (
             <View style={[styles.container]}>
-                <Header />
                 <View style={styles.loadingBlock}>
                     <ActivityIndicator size='large' color={COLORS.primary} />
                     <Text style={styles.loadingText}>Getting your location...</Text>
@@ -88,7 +86,6 @@ export default function HomePage() {
     if (status === 'granted' && !weather && !error) {
         return (
             <View style={[styles.container]}>
-                <Header />
                 <View style={styles.loadingBlock}>
                     <ActivityIndicator size='large' color={COLORS.primary} />
                     <Text style={styles.loadingText}>Loading weather...</Text>
@@ -99,7 +96,6 @@ export default function HomePage() {
 
     return (
         <View style={styles.container}>
-            <Header />
             <ScrollView
                 style={styles.scroll}
                 contentContainerStyle={styles.scrollContent}

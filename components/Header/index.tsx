@@ -3,26 +3,26 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { COLORS } from '../../shared/const/colors'
 
 type Props = {
-  title?: string
-  subtitle?: string
+    title?: string
+    subtitle?: string
 }
 
 export default function Header({ title = 'Weather', subtitle = 'Your weather by location' }: Props) {
-  const insets = useSafeAreaInsets()
+    const insets = useSafeAreaInsets()
 
-  return (
-    <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-      <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>{title}</Text>
-        <View style={styles.headerBadge}>
-          <Text style={styles.headerBadgeText}>
-            {new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
-          </Text>
+    return (
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+            <View style={styles.headerRow}>
+                <Text style={styles.headerTitle}>{title}</Text>
+                <View style={styles.headerBadge}>
+                    <Text style={styles.headerBadgeText}>
+                        {new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    </Text>
+                </View>
+            </View>
+            <Text style={styles.headerSubtitle}>{subtitle}</Text>
         </View>
-      </View>
-      <Text style={styles.headerSubtitle}>{subtitle}</Text>
-    </View>
-  )
+    )
 }
 
 const styles = StyleSheet.create({
@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 16,
         borderBottomWidth: 1,
-        borderBottomColor: COLORS.glassWhite
+        borderBottomColor: COLORS.glassWhite,
+        backgroundColor: COLORS.main
     },
     headerRow: {
         flexDirection: 'row',

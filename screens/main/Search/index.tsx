@@ -23,8 +23,6 @@ import WeatherCard from '../../../components/WeatherCard'
 import SuggestionsList from '../../../components/SuggestionsList'
 import { useFavoritesStore } from '../../../shared/store'
 
-const SEARCH_SUBTITLE = 'Search weather by city'
-
 export default function SearchPage() {
     const insets = useSafeAreaInsets()
     const favoriteCityIds = useFavoritesStore((s) => s.favoriteCityIds)
@@ -77,7 +75,6 @@ export default function SearchPage() {
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={0}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.keyboardDismissArea}>
-                    <Header subtitle={SEARCH_SUBTITLE} />
                     <ScrollView
                         style={styles.scroll}
                         contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 24 }]}

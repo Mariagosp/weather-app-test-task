@@ -25,7 +25,7 @@ export default function SettingsPage() {
 
   return (
     <View style={styles.container}>
-      <Header title="Settings" subtitle={SETTINGS_SUBTITLE} />
+      
       <View style={[styles.content, { paddingBottom: insets.bottom + 24 }]}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
