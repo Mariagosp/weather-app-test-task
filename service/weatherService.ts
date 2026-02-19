@@ -33,11 +33,11 @@ export const fetchSuggestions = async (input: string, setSuggestions: Dispatch<S
     }
 
     try {
-        const res = await fetch(
-            `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${apiKey}`
-        )
+        const res = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${apiKey}`)
         const data = await res.json()
-        const names = data.map((item: any) => `${item.name}, ${item.country}`)
+        const names = data.map((item: any) =>
+            item.state ? `${item.name}, ${item.state}, ${item.country}` : `${item.name}, ${item.country}`
+        )
         setSuggestions(names)
     } catch (e) {
         console.log('Suggestions error', e)
