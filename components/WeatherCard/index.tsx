@@ -1,5 +1,4 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import { ICON_BASE } from '../../shared/const/api'
 import { WeatherApiResponse } from '../../types/weather'
 import { COLORS } from '../../shared/const/colors'
@@ -9,7 +8,7 @@ type Props = {
     weather: WeatherApiResponse
     error: string | null
     openDetails: () => void
-    lastUpdatedAt: number | null
+    lastUpdatedAt?: number | null
 }
 
 export default function WeatherCard({ weather, error, openDetails, lastUpdatedAt }: Props) {
@@ -20,7 +19,7 @@ export default function WeatherCard({ weather, error, openDetails, lastUpdatedAt
                     <Text style={styles.city}>{weather.name}</Text>
                     <Text style={styles.country}>{weather.sys.country}</Text>
                 </View>
-                <StarBtn id={weather.id} />
+                <StarBtn id={weather.id} weather={weather} />
             </View>
             <View style={styles.mainRow}>
                 <Image source={{ uri: `${ICON_BASE}/${weather.weather[0].icon}@2x.png` }} style={styles.weatherIcon} />

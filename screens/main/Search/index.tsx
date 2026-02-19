@@ -17,15 +17,16 @@ import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { COLORS } from '../../../shared/const/colors'
 import type { WeatherApiResponse } from '../../../types/weather'
-import Header from '../../../components/Header'
 import { fetchSuggestions, fetchWeatherByCity, fetchWeatherById } from '../../../service/weatherService'
 import WeatherCard from '../../../components/WeatherCard'
 import SuggestionsList from '../../../components/SuggestionsList'
 import { useFavoritesStore } from '../../../shared/store'
+import { getCachedFavoritesWeather, setCachedFavoritesWeatherList } from '../../../service/favoritesCache'
 
 export default function SearchPage() {
     const insets = useSafeAreaInsets()
-    const favoriteCityIds = useFavoritesStore((s) => s.favoriteCityIds)
+  const favoriteCityIds = useFavoritesStore((state) => state.favoriteCityIds)
+  
     const [query, setQuery] = useState('')
     const [weather, setWeather] = useState<WeatherApiResponse | null>(null)
     const [suggestions, setSuggestions] = useState<string[]>([])
@@ -39,12 +40,28 @@ export default function SearchPage() {
             return
         }
 
+        let cancelled = false
+
+        getCachedFavoritesWeather(favoriteCityIds).then((cached) => {
+            console.log('cached', cached)
+            if (cancelled) return
+            if (cached.length > 0) setFavoriteWeathers(cached)
+        })
+
         Promise.allSettled(favoriteCityIds.map((id) => fetchWeatherById(id))).then((results) => {
+            if (cancelled) return
+
             const list = results
                 .filter((r): r is PromiseFulfilledResult<WeatherApiResponse> => r.status === 'fulfilled' && r.value != null)
                 .map((r) => r.value)
+
             setFavoriteWeathers(list)
+            setCachedFavoritesWeatherList(list).catch(() => {})
         })
+
+        return () => {
+            cancelled = true
+        }
     }, [favoriteCityIds])
 
     const search = async () => {

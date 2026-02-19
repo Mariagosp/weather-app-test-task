@@ -2,16 +2,23 @@ import { Ionicons } from '@expo/vector-icons'
 import { Pressable, StyleSheet } from 'react-native'
 import { useFavoritesStore } from '../../shared/store'
 import { COLORS } from '../../shared/const/colors'
+import { WeatherApiResponse } from '../../types/weather'
+import { setCachedFavoriteWeather } from '../../service/favoritesCache'
 
 type Props = {
     id: number
+    weather?: WeatherApiResponse
 }
 
-export default function StarBtn({ id }: Props) {
+export default function StarBtn({ id, weather }: Props) {
     const isFavorite = useFavoritesStore((state) => state.isFavorite(id))
     const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
 
-    const onStarPress = () => {
+    const onStarPress = async () => {
+        if (!isFavorite && weather) {
+            await setCachedFavoriteWeather(id, weather).catch(() => {})
+        }
+
         toggleFavorite(id)
     }
 
