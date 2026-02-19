@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Pressable } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import { useLocalSearchParams } from 'expo-router'
@@ -8,6 +8,7 @@ import { ICON_BASE } from '../shared/const/api'
 import { useEffect, useState, useCallback } from 'react'
 import { WeatherApiResponse } from '../types/weather'
 import { fetchWeatherById } from '../service/weatherService'
+import StarBtn from '../components/StarBtn'
 
 export default function WeatherDetailsScreen() {
     const insets = useSafeAreaInsets()
@@ -81,9 +82,12 @@ export default function WeatherDetailsScreen() {
                 <Text style={styles.title} onPress={() => router.back()}>
                     ← Back
                 </Text>
-                <Text style={styles.city}>
-                    {currentWeather.name}, {currentWeather.sys.country}
-                </Text>
+                <View style={styles.headerRow}>
+                    <Text style={styles.city}>
+                        {currentWeather.name}, {currentWeather.sys.country}
+                    </Text>
+                    <StarBtn id={currentWeather.id} />
+                </View>
             </View>
 
             <View style={styles.hero}>
@@ -154,6 +158,10 @@ const styles = StyleSheet.create({
     },
     header: {
         marginBottom: 24
+    },
+    headerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     title: {
         fontSize: 17,

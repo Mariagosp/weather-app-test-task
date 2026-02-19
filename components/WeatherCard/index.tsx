@@ -4,6 +4,7 @@ import { ICON_BASE } from '../../shared/const/api'
 import { WeatherApiResponse } from '../../types/weather'
 import { COLORS } from '../../shared/const/colors'
 import { useFavoritesStore } from '../../shared/store'
+import StarBtn from '../StarBtn'
 
 type Props = {
     weather: WeatherApiResponse
@@ -16,7 +17,7 @@ export default function WeatherCard({ weather, error, openDetails }: Props) {
     const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite)
 
     const onStarPress = () => {
-      console.log('weather.id', weather.id)
+        console.log('weather.id', weather.id)
         toggleFavorite(weather.id)
     }
     return (
@@ -26,13 +27,7 @@ export default function WeatherCard({ weather, error, openDetails }: Props) {
                     <Text style={styles.city}>{weather.name}</Text>
                     <Text style={styles.country}>{weather.sys.country}</Text>
                 </View>
-                <Pressable onPress={onStarPress} hitSlop={12} style={({ pressed }) => [styles.starBtn, pressed && styles.starBtnPressed]}>
-                    <Ionicons
-                        name={isFavorite ? 'star' : 'star-outline'}
-                        size={26}
-                        color={isFavorite ? COLORS.primary : COLORS.textSecondary}
-                    />
-                </Pressable>
+                <StarBtn id={weather.id} />
             </View>
             <View style={styles.mainRow}>
                 <Image source={{ uri: `${ICON_BASE}/${weather.weather[0].icon}@2x.png` }} style={styles.weatherIcon} />
@@ -74,12 +69,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'baseline',
         gap: 8
-    },
-    starBtn: {
-        padding: 4
-    },
-    starBtnPressed: {
-        opacity: 0.7
     },
     city: {
         fontSize: 24,

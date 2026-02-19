@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     View,
     Text,
@@ -18,19 +18,36 @@ import { router } from 'expo-router'
 import { COLORS } from '../../../shared/const/colors'
 import type { WeatherApiResponse } from '../../../types/weather'
 import Header from '../../../components/Header'
-import { fetchSuggestions, fetchWeatherByCity } from '../../../service/weatherService'
+import { fetchSuggestions, fetchWeatherByCity, fetchWeatherById } from '../../../service/weatherService'
 import WeatherCard from '../../../components/WeatherCard'
 import SuggestionsList from '../../../components/SuggestionsList'
+import { useFavoritesStore } from '../../../shared/store'
 
 const SEARCH_SUBTITLE = 'Search weather by city'
 
 export default function SearchPage() {
     const insets = useSafeAreaInsets()
+    const favoriteCityIds = useFavoritesStore((s) => s.favoriteCityIds)
     const [query, setQuery] = useState('')
     const [weather, setWeather] = useState<WeatherApiResponse | null>(null)
     const [suggestions, setSuggestions] = useState<string[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [favoriteWeathers, setFavoriteWeathers] = useState<WeatherApiResponse[]>([])
+
+    useEffect(() => {
+        if (favoriteCityIds.length === 0) {
+            setFavoriteWeathers([])
+            return
+        }
+
+        Promise.allSettled(favoriteCityIds.map((id) => fetchWeatherById(id))).then((results) => {
+            const list = results
+                .filter((r): r is PromiseFulfilledResult<WeatherApiResponse> => r.status === 'fulfilled' && r.value != null)
+                .map((r) => r.value)
+            setFavoriteWeathers(list)
+        })
+    }, [favoriteCityIds])
 
     const search = async () => {
         if (!query.trim()) return
@@ -49,13 +66,11 @@ export default function SearchPage() {
 
     const openDetails = () => {
         if (!weather) return
-        // setCurrentWeather(weather)
-        router.push({
-            pathname: '/weather-details',
-            params: {
-                id: weather.id
-            }
-        })
+        router.push({ pathname: '/weather-details', params: { id: weather.id } })
+    }
+
+    const openDetailsForFavorite = (w: WeatherApiResponse) => {
+        router.push({ pathname: '/weather-details', params: { id: w.id } })
     }
 
     return (
@@ -142,6 +157,21 @@ export default function SearchPage() {
                         )}
 
                         {weather && <WeatherCard weather={weather} error={null} openDetails={openDetails} />}
+
+                        {favoriteCityIds.length > 0 && (
+                            <View style={styles.favoritesSection}>
+                                <Text style={styles.favoritesTitle}>Favorites</Text>
+                                {favoriteWeathers.length > 0 ? (
+                                    favoriteWeathers.map((w) => (
+                                        <View key={w.id} style={styles.favoriteCardWrap}>
+                                            <WeatherCard weather={w} error={null} openDetails={() => openDetailsForFavorite(w)} />
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text style={styles.favoritesEmpty}>Could not load some cities</Text>
+                                )}
+                            </View>
+                        )}
                     </ScrollView>
                 </View>
             </TouchableWithoutFeedback>
@@ -321,5 +351,35 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: COLORS.textSecondary,
         marginTop: 12
+    },
+    favoritesSection: {
+        marginTop: 32,
+        paddingTop: 24,
+        borderTopWidth: 1,
+        borderTopColor: COLORS.glassWhite
+    },
+    favoritesTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: COLORS.text,
+        marginBottom: 16
+    },
+    favoritesLoading: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        paddingVertical: 16
+    },
+    favoritesLoadingText: {
+        fontSize: 15,
+        color: COLORS.textSecondary
+    },
+    favoriteCardWrap: {
+        marginBottom: 16
+    },
+    favoritesEmpty: {
+        fontSize: 15,
+        color: COLORS.textSecondary,
+        paddingVertical: 8
     }
 })
