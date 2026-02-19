@@ -1,27 +1,19 @@
-import { Redirect } from 'expo-router'
-import { useUserStore } from '../shared/store'
-import { useEffect } from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '../firebase'
+import { View, ActivityIndicator, StyleSheet } from 'react-native'
+import { COLORS } from '../shared/const/colors'
 
 export default function Index() {
-    const { user, isLoading, setUserData } = useUserStore()
-
-    useEffect(() => {
-        console.log('user', user)
-    }, [user])
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-            setUserData(firebaseUser)
-        })
-
-        return unsubscribe
-    }, [])
-
-    if (isLoading) return null
-
-    if (!user) return <Redirect href='/(auth)/get-started' />
-
-    return <Redirect href='/(tabs)/home' />
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={COLORS.primary} />
+    </View>
+  )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.main,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+})

@@ -1,4 +1,4 @@
-import { router, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useForm, Controller } from 'react-hook-form'
@@ -34,8 +34,6 @@ export default function RegisterPage() {
             console.log('got user', user)
 
             setUser(user)
-
-            router.replace('/(tabs)/home')
         } catch (error: any) {
             console.log('Registration error:', error.message)
         }

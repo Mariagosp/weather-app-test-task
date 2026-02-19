@@ -3,16 +3,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { COLORS } from '../../shared/const/colors'
 
 type Props = {
+  title?: string
   subtitle?: string
 }
 
-export default function Header({ subtitle = 'Your weather by location' }: Props) {
+export default function Header({ title = 'Weather', subtitle = 'Your weather by location' }: Props) {
   const insets = useSafeAreaInsets()
 
   return (
     <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
       <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>Weather</Text>
+        <Text style={styles.headerTitle}>{title}</Text>
         <View style={styles.headerBadge}>
           <Text style={styles.headerBadgeText}>
             {new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}

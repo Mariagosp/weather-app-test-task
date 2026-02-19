@@ -5,6 +5,9 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { LoginFormData, loginSchema } from './utils/loginSchema'
 import { COLORS } from '../../../shared/const/colors'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../../firebase'
+import { useUserStore } from '../../../shared/store'
 
 export default function LoginPage() {
     const {
@@ -16,9 +19,21 @@ export default function LoginPage() {
         defaultValues: { email: '', password: '' }
     })
 
-    const onSubmit = (data: LoginFormData) => {
+    const setUser = useUserStore((state) => state.setUserData)
+
+    const onSubmit = async (data: LoginFormData) => {
         console.log('Login', data)
-        // router.replace('/(tabs)/home')
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
+            const user = userCredential.user
+
+            console.log('user when login', user)
+
+            setUser(user)
+        } catch (error) {
+            console.error('error while Login', error)
+        }
     }
 
     return (
