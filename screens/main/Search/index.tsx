@@ -16,7 +16,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { COLORS } from '../../../shared/const/colors'
-import { useWeatherStore } from '../../../shared/store'
 import type { WeatherApiResponse } from '../../../types/weather'
 import Header from '../../../components/Header'
 import { fetchSuggestions, fetchWeatherByCity } from '../../../service/weatherService'
@@ -27,7 +26,6 @@ const SEARCH_SUBTITLE = 'Search weather by city'
 
 export default function SearchPage() {
     const insets = useSafeAreaInsets()
-    const setCurrentWeather = useWeatherStore((s) => s.setCurrentWeather)
     const [query, setQuery] = useState('')
     const [weather, setWeather] = useState<WeatherApiResponse | null>(null)
     const [suggestions, setSuggestions] = useState<string[]>([])
@@ -51,8 +49,13 @@ export default function SearchPage() {
 
     const openDetails = () => {
         if (!weather) return
-        setCurrentWeather(weather)
-        router.push('/weather-details')
+        // setCurrentWeather(weather)
+        router.push({
+            pathname: '/weather-details',
+            params: {
+                id: weather.id
+            }
+        })
     }
 
     return (
@@ -318,5 +321,5 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: COLORS.textSecondary,
         marginTop: 12
-    },
+    }
 })

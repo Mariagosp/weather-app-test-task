@@ -3,7 +3,6 @@ import { View, Text, Pressable, StyleSheet, ActivityIndicator, RefreshControl, S
 import * as Location from 'expo-location'
 import { router } from 'expo-router'
 import { COLORS } from '../../../shared/const/colors'
-import { useWeatherStore } from '../../../shared/store'
 import type { WeatherApiResponse } from '../../../types/weather'
 import Header from '../../../components/Header'
 import { fetchWeatherByCoords } from '../../../service/weatherService'
@@ -11,8 +10,6 @@ import WeatherCard from '../../../components/WeatherCard'
 import * as Linking from 'expo-linking'
 
 export default function HomePage() {
-    const setCurrentWeather = useWeatherStore((s) => s.setCurrentWeather)
-
     const [status, setStatus] = useState<'loading' | 'granted' | 'denied'>('loading')
     const [weather, setWeather] = useState<WeatherApiResponse | null>(null)
     const [refreshing, setRefreshing] = useState(false)
@@ -66,8 +63,14 @@ export default function HomePage() {
 
     const openDetails = () => {
         if (!weather) return
-        setCurrentWeather(weather)
-        router.push('/weather-details')
+      // setCurrentWeather(weather)
+      console.log('push to ', weather.id)
+        router.push({
+            pathname: '/weather-details',
+            params: {
+                id: weather.id
+            }
+        })
     }
 
     if (status === 'loading' && !weather) {

@@ -1,7 +1,9 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 import { ICON_BASE } from '../../shared/const/api'
 import { WeatherApiResponse } from '../../types/weather'
 import { COLORS } from '../../shared/const/colors'
+import { useFavoritesStore } from '../../shared/store'
 
 type Props = {
     weather: WeatherApiResponse
@@ -10,11 +12,27 @@ type Props = {
 }
 
 export default function WeatherCard({ weather, error, openDetails }: Props) {
+    const isFavorite = useFavoritesStore((s) => s.isFavorite(weather.id))
+    const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite)
+
+    const onStarPress = () => {
+      console.log('weather.id', weather.id)
+        toggleFavorite(weather.id)
+    }
     return (
         <Pressable style={({ pressed }) => [styles.weatherCard, pressed && styles.weatherCardPressed]} onPress={openDetails}>
             <View style={styles.cardHeader}>
-                <Text style={styles.city}>{weather.name}</Text>
-                <Text style={styles.country}>{weather.sys.country}</Text>
+                <View style={styles.cardTitleRow}>
+                    <Text style={styles.city}>{weather.name}</Text>
+                    <Text style={styles.country}>{weather.sys.country}</Text>
+                </View>
+                <Pressable onPress={onStarPress} hitSlop={12} style={({ pressed }) => [styles.starBtn, pressed && styles.starBtnPressed]}>
+                    <Ionicons
+                        name={isFavorite ? 'star' : 'star-outline'}
+                        size={26}
+                        color={isFavorite ? COLORS.primary : COLORS.textSecondary}
+                    />
+                </Pressable>
             </View>
             <View style={styles.mainRow}>
                 <Image source={{ uri: `${ICON_BASE}/${weather.weather[0].icon}@2x.png` }} style={styles.weatherIcon} />
@@ -48,9 +66,20 @@ const styles = StyleSheet.create({
     },
     cardHeader: {
         flexDirection: 'row',
-        alignItems: 'baseline',
-        gap: 8,
+        alignItems: 'center',
+        justifyContent: 'space-between',
         marginBottom: 20
+    },
+    cardTitleRow: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        gap: 8
+    },
+    starBtn: {
+        padding: 4
+    },
+    starBtnPressed: {
+        opacity: 0.7
     },
     city: {
         fontSize: 24,

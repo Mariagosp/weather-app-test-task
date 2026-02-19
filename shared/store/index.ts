@@ -1,2 +1,2 @@
 export { useUserStore } from './useUserStore'
-export { useWeatherStore } from './useWeatherStore'
+export { useFavoritesStore } from './useFavoritesStore'

@@ -44,3 +44,17 @@ export const fetchSuggestions = async (input: string, setSuggestions: Dispatch<S
         setSuggestions([])
     }
 }
+
+export const fetchWeatherById = async (cityId: number) => {
+    if (!apiKey) throw new Error('EXPO_PUBLIC_OPENWEATHER_API_KEY is not set')
+    const url = `https://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apiKey}&units=metric`
+    const res = await fetch(url)
+    const data = await res.json()
+    console.log('data from backend', data)
+
+    if (!res.ok || data.cod !== 200) {
+        const msg = data?.message === 'city not found' ? 'City not found' : data?.message || 'Failed to load weather'
+        throw new Error(msg)
+    }
+    return data as WeatherApiResponse
+}
