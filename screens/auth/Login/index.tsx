@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         color: '#e2e8f0'
     },
     input: {
-        backgroundColor: 'rgba(248, 250, 252, 0.08)',
+        backgroundColor: COLORS.glassWhite,
         borderWidth: 1.5,
         borderColor: 'rgba(248, 250, 252, 0.2)',
         borderRadius: 12,
@@ -174,11 +174,11 @@ const styles = StyleSheet.create({
         color: COLORS.text
     },
     inputError: {
-        borderColor: '#f87171'
+        borderColor: COLORS.error
     },
     errorText: {
         fontSize: 13,
-        color: '#f87171'
+        color: COLORS.error
     },
     submitButton: {
         backgroundColor: COLORS.primary,

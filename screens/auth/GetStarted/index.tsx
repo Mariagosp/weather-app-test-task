@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: 'rgba(248, 250, 252, 0.35)',
-    backgroundColor: 'rgba(248, 250, 252, 0.06)',
+    backgroundColor: COLORS.glassWhiteSoft,
   },
   buttonSecondaryText: {
     fontSize: 17,

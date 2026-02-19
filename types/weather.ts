@@ -1,4 +1,3 @@
-// OpenWeatherMap API response (current weather)
 export type WeatherApiResponse = {
   coord: { lon: number; lat: number }
   weather: Array<{

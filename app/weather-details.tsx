@@ -3,17 +3,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import { useWeatherStore } from '../shared/store'
 import { COLORS } from '../shared/const/colors'
-
-const ICON_BASE = 'https://openweathermap.org/img/wn'
-
-function DetailRow({ label, value }: { label: string; value: string | number }) {
-  return (
-    <View style={styles.detailRow}>
-      <Text style={styles.detailLabel}>{label}</Text>
-      <Text style={styles.detailValue}>{value}</Text>
-    </View>
-  )
-}
+import { DetailRow } from '../components/DetailRow'
+import { ICON_BASE } from '../shared/const/api'
 
 export default function WeatherDetailsScreen() {
   const insets = useSafeAreaInsets()
@@ -126,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(248, 250, 252, 0.04)',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(248, 250, 252, 0.06)',
+    borderColor: COLORS.glassWhiteSoft,
   },
   bigIcon: {
     width: 120,
@@ -151,34 +142,17 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   card: {
-    backgroundColor: 'rgba(248, 250, 252, 0.06)',
+    backgroundColor: COLORS.glassWhiteSoft,
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: 'rgba(248, 250, 252, 0.06)',
+    borderColor: COLORS.glassWhiteSoft,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: COLORS.text,
     marginBottom: 16,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(248, 250, 252, 0.06)',
-  },
-  detailLabel: {
-    fontSize: 16,
-    color: COLORS.textSecondary,
-  },
-  detailValue: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.text,
   },
 })

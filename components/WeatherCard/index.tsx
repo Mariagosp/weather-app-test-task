@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
     weatherCard: {
         width: '100%',
         maxWidth: 360,
-        backgroundColor: 'rgba(248, 250, 252, 0.06)',
+        backgroundColor: COLORS.glassWhiteSoft,
         borderRadius: 24,
         padding: 24,
         borderWidth: 1,
-        borderColor: 'rgba(248, 250, 252, 0.08)'
+        borderColor: COLORS.glassWhite
     },
     weatherCardPressed: {
         opacity: 0.92
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
     errorText: {
         marginTop: 12,
         fontSize: 14,
-        color: '#f87171'
+        color: COLORS.error
     }
 })

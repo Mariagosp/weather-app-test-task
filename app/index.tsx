@@ -8,6 +8,10 @@ export default function Index() {
     const { user, isLoading, setUserData } = useUserStore()
 
     useEffect(() => {
+        console.log('user', user)
+    }, [user])
+
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
             setUserData(firebaseUser)
         })

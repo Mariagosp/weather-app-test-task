@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 16,
         borderBottomWidth: 1,
-        borderBottomColor: 'rgba(248, 250, 252, 0.08)'
+        borderBottomColor: COLORS.glassWhite
     },
     headerRow: {
         flexDirection: 'row',
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         letterSpacing: -0.5
     },
     headerBadge: {
-        backgroundColor: 'rgba(248, 250, 252, 0.08)',
+        backgroundColor: COLORS.glassWhite,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 12

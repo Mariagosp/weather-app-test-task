@@ -10,7 +10,7 @@ export default function TabsLayout() {
         animation: 'fade',
         tabBarStyle: {
           backgroundColor: COLORS.main,
-          borderTopColor: 'rgba(248, 250, 252, 0.08)',
+          borderTopColor: COLORS.glassWhite,
           borderTopWidth: 1,
           height: 80,
           paddingBottom: 8,
@@ -41,13 +41,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="search" size={size} color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name="weather-details"
-        options={{
-          href: null,
-          headerShown: false,
-        }}
-      /> */}
     </Tabs>
   )
 }
