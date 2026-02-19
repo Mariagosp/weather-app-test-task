@@ -8,8 +8,14 @@ import { COLORS } from '../../../shared/const/colors'
 import { useUserStore } from '../../../shared/store'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../firebase'
+import { useState } from 'react'
+import { FirebaseError } from 'firebase/app'
+import { mapFirebaseError } from '../../../utils/mapFirebaseError'
+import ErrorMessage from '../../../components/ErrorMessage'
 
 export default function RegisterPage() {
+    const [error, setError] = useState('')
+
     const {
         control,
         handleSubmit,
@@ -34,8 +40,10 @@ export default function RegisterPage() {
             console.log('got user', user)
 
             setUser(user)
-        } catch (error: any) {
+        } catch (err) {
+            const error = err as FirebaseError
             console.log('Registration error:', error.message)
+            setError(mapFirebaseError(error.code))
         }
     }
 
@@ -127,7 +135,7 @@ export default function RegisterPage() {
                                     </View>
                                 )}
                             />
-
+                            <ErrorMessage text={error} />
                             <Pressable
                                 style={({ pressed }) => [styles.submitButton, (pressed || isSubmitting) && styles.submitButtonPressed]}
                                 onPress={handleSubmit(onSubmit)}

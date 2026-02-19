@@ -8,8 +8,14 @@ import { COLORS } from '../../../shared/const/colors'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../firebase'
 import { useUserStore } from '../../../shared/store'
+import { useState } from 'react'
+import { mapFirebaseError } from '../../../utils/mapFirebaseError'
+import { FirebaseError } from 'firebase/app'
+import ErrorMessage from '../../../components/ErrorMessage'
 
 export default function LoginPage() {
+    const [error, setError] = useState('')
+
     const {
         control,
         handleSubmit,
@@ -31,8 +37,11 @@ export default function LoginPage() {
             console.log('user when login', user)
 
             setUser(user)
-        } catch (error) {
+        } catch (err) {
+            const error = err as FirebaseError
+
             console.error('error while Login', error)
+            setError(mapFirebaseError(error.code))
         }
     }
 
@@ -103,7 +112,7 @@ export default function LoginPage() {
                                     </View>
                                 )}
                             />
-
+                            <ErrorMessage text={error} />
                             <Pressable
                                 style={({ pressed }) => [styles.submitButton, (pressed || isSubmitting) && styles.submitButtonPressed]}
                                 onPress={handleSubmit(onSubmit)}
