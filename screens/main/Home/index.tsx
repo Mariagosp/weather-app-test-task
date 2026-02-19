@@ -8,9 +8,11 @@ import { fetchWeatherByCoords } from '../../../service/weatherService'
 import WeatherCard from '../../../components/WeatherCard'
 import * as Linking from 'expo-linking'
 import { getCachedHomeWeather, setCachedHomeWeather } from '../../../service/homeWeatherCache'
-// import * as Network from 'expo-network'
+import { useNetworkStatus } from '../../../shared/hooks'
 
 export default function HomePage() {
+    const isConnected = useNetworkStatus()
+
     const [status, setStatus] = useState<'loading' | 'granted' | 'denied'>('loading')
     const [weather, setWeather] = useState<WeatherApiResponse | null>(null)
     const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null)
@@ -40,9 +42,7 @@ export default function HomePage() {
             setError(null)
 
             try {
-                console.log('now working requestForegroundPermissionsAsync')
                 const { status: perm } = await Location.requestForegroundPermissionsAsync()
-
                 if (perm !== 'granted') {
                     setStatus('denied')
                     setWeather(null)
@@ -54,7 +54,11 @@ export default function HomePage() {
                 const { coords } = await Location.getCurrentPositionAsync({
                     accuracy: Location.Accuracy.Balanced
                 })
-                console.log('now working requestLocationAndFetch')
+
+                if (!isConnected) {
+                    return
+                }
+
                 const data = await fetchWeatherByCoords(coords.latitude, coords.longitude)
 
                 setWeather(data)
@@ -120,7 +124,6 @@ export default function HomePage() {
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={() => {
-                            console.log('RefreshControl')
                             requestLocationAndFetch(true)
                         }}
                         tintColor={COLORS.text}

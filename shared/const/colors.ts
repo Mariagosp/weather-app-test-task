@@ -5,5 +5,6 @@ export const COLORS = {
     primary: '#f59e0b',
     glassWhite: 'rgba(248, 250, 252, 0.08)',
     glassWhiteSoft: 'rgba(248, 250, 252, 0.06)',
-    error: '#f87171'
+    error: '#f87171',
+    placeholder: '#64748b'
 }

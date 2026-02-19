@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { COLORS } from '../../shared/const/colors'
+import { Ionicons } from '@expo/vector-icons'
+import { useNetworkStatus } from '../../shared/hooks'
 
 type Props = {
     title?: string
@@ -9,6 +11,7 @@ type Props = {
 
 export default function Header({ title = 'Weather', subtitle = 'Your weather by location' }: Props) {
     const insets = useSafeAreaInsets()
+    const isConnected = useNetworkStatus()
 
     return (
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
@@ -20,7 +23,10 @@ export default function Header({ title = 'Weather', subtitle = 'Your weather by 
                     </Text>
                 </View>
             </View>
-            <Text style={styles.headerSubtitle}>{subtitle}</Text>
+            <View style={styles.subTitleBlock}>
+                <Text style={styles.headerSubtitle}>{subtitle}</Text>
+                <Ionicons name={isConnected ? 'wifi' : 'cloud-offline'} color={COLORS.textSecondary} size={15} />
+            </View>
         </View>
     )
 }
@@ -59,5 +65,10 @@ const styles = StyleSheet.create({
     headerSubtitle: {
         fontSize: 15,
         color: COLORS.textSecondary
+    },
+    subTitleBlock: {
+        flexDirection: 'row',
+        gap: 15,
+        alignItems: 'center'
     }
 })

@@ -78,7 +78,7 @@ export default function LoginPage() {
                                         <TextInput
                                             style={[styles.input, errors.email && styles.inputError]}
                                             placeholder='example@mail.com'
-                                            placeholderTextColor='#64748b'
+                                            placeholderTextColor={COLORS.placeholder}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}
@@ -101,7 +101,7 @@ export default function LoginPage() {
                                         <TextInput
                                             style={[styles.input, errors.password && styles.inputError]}
                                             placeholder='••••••••'
-                                            placeholderTextColor='#64748b'
+                                            placeholderTextColor={COLORS.placeholder}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}

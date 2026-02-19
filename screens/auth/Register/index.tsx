@@ -80,7 +80,7 @@ export default function RegisterPage() {
                                         <TextInput
                                             style={[styles.input, errors.email && styles.inputError]}
                                             placeholder='example@mail.com'
-                                            placeholderTextColor='#64748b'
+                                            placeholderTextColor={COLORS.placeholder}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                                         <TextInput
                                             style={[styles.input, errors.password && styles.inputError]}
                                             placeholder='At least 6 characters'
-                                            placeholderTextColor='#64748b'
+                                            placeholderTextColor={COLORS.placeholder}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}
@@ -124,7 +124,7 @@ export default function RegisterPage() {
                                         <TextInput
                                             style={[styles.input, errors.confirmPassword && styles.inputError]}
                                             placeholder='••••••••'
-                                            placeholderTextColor='#64748b'
+                                            placeholderTextColor={COLORS.placeholder}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}
