@@ -3,23 +3,16 @@ import { Ionicons } from '@expo/vector-icons'
 import { ICON_BASE } from '../../shared/const/api'
 import { WeatherApiResponse } from '../../types/weather'
 import { COLORS } from '../../shared/const/colors'
-import { useFavoritesStore } from '../../shared/store'
 import StarBtn from '../StarBtn'
 
 type Props = {
     weather: WeatherApiResponse
     error: string | null
     openDetails: () => void
+    lastUpdatedAt: number | null
 }
 
-export default function WeatherCard({ weather, error, openDetails }: Props) {
-    const isFavorite = useFavoritesStore((s) => s.isFavorite(weather.id))
-    const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite)
-
-    const onStarPress = () => {
-        console.log('weather.id', weather.id)
-        toggleFavorite(weather.id)
-    }
+export default function WeatherCard({ weather, error, openDetails, lastUpdatedAt }: Props) {
     return (
         <Pressable style={({ pressed }) => [styles.weatherCard, pressed && styles.weatherCardPressed]} onPress={openDetails}>
             <View style={styles.cardHeader}>
@@ -42,6 +35,7 @@ export default function WeatherCard({ weather, error, openDetails }: Props) {
                 <Text style={styles.miniStat}>💨 {weather.wind.speed} m/s</Text>
             </View>
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            {lastUpdatedAt && <Text style={styles.lastUpdatedText}>Last updated at {new Date(lastUpdatedAt).toLocaleString()}</Text>}
         </Pressable>
     )
 }
@@ -114,6 +108,11 @@ const styles = StyleSheet.create({
     },
     miniStat: {
         fontSize: 14,
+        color: COLORS.textSecondary
+    },
+    lastUpdatedText: {
+        fontSize: 12,
+        marginTop: 10,
         color: COLORS.textSecondary
     },
     errorText: {

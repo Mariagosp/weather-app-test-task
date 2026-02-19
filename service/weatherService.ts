@@ -22,7 +22,7 @@ export async function fetchWeatherByCoords(lat: number, lon: number): Promise<We
     const res = await fetch(url)
     if (!res.ok) throw new Error('Weather request failed')
     const data = (await res.json()) as WeatherApiResponse
-    if (data.cod !== 200) throw new Error(data.message || 'Invalid response')
+    if (data.cod !== 200) throw new Error(data?.cod?.toString() || 'Invalid response')
     return data
 }
 
