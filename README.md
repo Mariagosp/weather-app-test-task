@@ -25,52 +25,6 @@ A modern mobile weather application built with React Native and Expo. The app pr
 | Network | @react-native-community/netinfo |
 | Linting | ESLint, Prettier |
 
-## Project Structure
-
-```
-weather-app/
-├── app/                      # Expo Router — screens and navigation
-│   ├── (auth)/               # Authentication
-│   │   ├── get-started.tsx
-│   │   ├── login.tsx
-│   │   └── register.tsx
-│   ├── (tabs)/               # Main tabs
-│   │   ├── home.tsx
-│   │   ├── search.tsx
-│   │   └── settings.tsx
-│   └── weather-details.tsx   # Weather details screen
-├── screens/                  # Screen UI components
-│   ├── auth/
-│   │   ├── GetStarted/
-│   │   ├── Login/
-│   │   └── Register/
-│   └── main/
-│       ├── Home/
-│       ├── Search/
-│       ├── Settings/
-│       └── WeatherDetails/
-├── components/               # Reusable components
-│   ├── WeatherCard/
-│   ├── DetailRow/
-│   ├── StarBtn/
-│   ├── SuggestionsList/
-│   ├── ErrorMessage/
-│   └── Header/
-├── service/                  # Services and API
-│   ├── weatherService.ts     # OpenWeatherMap API integration
-│   ├── authStorage.ts        # Secure token storage
-│   ├── homeWeatherCache.ts   # Home weather cache
-│   └── favoritesCache.ts     # Favorites cache
-├── shared/
-│   ├── const/                # Constants
-│   ├── hooks/                # Custom hooks
-│   └── store/                # Zustand stores
-├── providers/                # React providers
-│   └── AuthProvider.tsx
-├── types/                    # TypeScript types
-└── utils/                    # Utilities
-```
-
 ## Installation and Setup
 
 ### Requirements
