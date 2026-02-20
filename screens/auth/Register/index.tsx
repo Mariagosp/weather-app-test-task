@@ -29,20 +29,15 @@ export default function RegisterPage() {
     const setUser = useUserStore((state) => state.setUserData)
 
     const onSubmit = async (data: RegisterFormData) => {
-        console.log('Register', data)
         try {
             const { email, password } = data
 
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             const user = userCredential.user
 
-            console.log('got userCredential', userCredential)
-            console.log('got user', user)
-
             setUser(user)
         } catch (err) {
             const error = err as FirebaseError
-            console.log('Registration error:', error.message)
             setError(mapFirebaseError(error.code))
         }
     }

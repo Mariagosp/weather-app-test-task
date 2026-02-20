@@ -7,7 +7,6 @@ const FAVORITES_WEATHER_KEY = CACHE_KEYS.FAVORITES_WEATHER
 
 export async function getPersistedFavoriteIds(): Promise<number[]> {
     try {
-        console.log('getPersistedFavoriteIds workinggg')
         const raw = await AsyncStorage.getItem(FAVORITES_KEY)
 
         if (!raw) {
@@ -23,8 +22,6 @@ export async function getPersistedFavoriteIds(): Promise<number[]> {
 }
 
 export async function setPersistedFavoriteIds(ids: number[]): Promise<void> {
-    console.log('setPersistedFavoriteIds workinggg')
-
     try {
         await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(ids))
     } catch (e) {
@@ -37,8 +34,6 @@ export async function getCachedFavoritesWeather(cityIds: number[]): Promise<Weat
         return []
     }
 
-    console.log('getCachedFavoritesWeather workinggg')
-
     try {
         const raw = await AsyncStorage.getItem(FAVORITES_WEATHER_KEY)
 
@@ -47,8 +42,6 @@ export async function getCachedFavoritesWeather(cityIds: number[]): Promise<Weat
         }
 
         const cache = JSON.parse(raw) as FavoritesWeatherCache
-
-        console.log('cache from getCachedFavoritesWeather', cache)
 
         const result: WeatherApiResponse[] = []
 
@@ -68,8 +61,6 @@ export async function getCachedFavoritesWeather(cityIds: number[]): Promise<Weat
 
 export async function setCachedFavoriteWeather(cityId: number, data: WeatherApiResponse): Promise<void> {
     try {
-        console.log('setCachedFavoriteWeather workinggg')
-
         const raw = await AsyncStorage.getItem(FAVORITES_WEATHER_KEY)
         const cache: FavoritesWeatherCache = raw ? JSON.parse(raw) : {}
 
@@ -85,7 +76,6 @@ export async function setCachedFavoritesWeatherList(items: WeatherApiResponse[])
     if (items.length === 0) return
 
     try {
-        console.log('setCachedFavoritesWeatherList workinggg')
         const raw = await AsyncStorage.getItem(FAVORITES_WEATHER_KEY)
         const cache: FavoritesWeatherCache = raw ? JSON.parse(raw) : {}
 
@@ -103,8 +93,6 @@ export async function setCachedFavoritesWeatherList(items: WeatherApiResponse[])
 
 export async function removeCachedFavoriteWeather(cityId: number): Promise<void> {
     try {
-        console.log('removeCachedFavoriteWeather workinggg')
-
         const raw = await AsyncStorage.getItem(FAVORITES_WEATHER_KEY)
 
         if (!raw) return

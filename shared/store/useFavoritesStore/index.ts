@@ -18,10 +18,10 @@ export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
         ? state.favoriteCityIds.filter((id) => id !== cityId)
         : [...state.favoriteCityIds, cityId]
 
-      setPersistedFavoriteIds(next).catch(() => { })
+      setPersistedFavoriteIds(next).catch((e) => { console.warn('Failed to persist favorites', e) })
 
       if (has) {
-        removeCachedFavoriteWeather(cityId).catch(() => {})
+        removeCachedFavoriteWeather(cityId).catch(() => { })
       }
 
       return { favoriteCityIds: next }
