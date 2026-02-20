@@ -21,7 +21,7 @@ A modern mobile weather application built with React Native and Expo. The app pr
 | State Management | Zustand |
 | Backend/Auth | Firebase |
 | Forms | React Hook Form + Yup |
-| Data Storage | AsyncStorage, Expo SecureStore |
+| Data Storage | AsyncStorage, Expo SecureStore (analogue Keychain (react-native-keychain)) |
 | Network | @react-native-community/netinfo |
 | Linting | ESLint, Prettier |
 
